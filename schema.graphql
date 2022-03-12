@@ -1,0 +1,71 @@
+type RemarkEntity @entity {
+  id: ID! #id is a required field
+  value: String!
+  caller: String!
+  blockNumber: String!
+  interaction: String
+}
+
+type FailedEntity @entity {
+  id: ID! #id is a required field
+  value: String!
+  reason: String!
+  interaction: String
+}
+
+type CollectionEntity @entity {
+  version: String
+  name: String
+  max: Int
+  issuer: String
+  symbol: String
+  id: ID!
+  metadata: String
+  currentOwner: String
+  nfts: [NFTEntity] @derivedFrom(field: "collection")
+  events: [Event]
+  blockNumber: BigInt @index
+}
+
+type NFTEntity @entity {
+  name: String @index
+  instance: String
+  transferable: Int
+  collection: CollectionEntity!
+  issuer: String @index
+  sn: String
+  id: ID!
+  metadata: String
+  currentOwner: String
+  price: BigInt
+  burned: Boolean
+  blockNumber: BigInt @index
+  events: [Event]
+  emotes: [Emote] @derivedFrom(field: "nft")
+  createdAt: Date!
+  updatedAt: Date! @index
+}
+
+type Event @jsonField {
+  blockNumber: String
+  timestamp: Date
+  caller: String!
+  interaction: String
+  meta: String!
+}
+
+type Emote @entity {
+  id: ID!
+  nft: NFTEntity!
+  caller: String!
+  value: String!
+}
+
+enum Interaction {
+  MINT
+  MINTNFT
+  LIST
+  BUY
+  CONSUME
+  EMOTE
+}
